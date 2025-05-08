@@ -9,22 +9,6 @@ export class UsuarioController {
         
     }
 
-    // @Get('/:id')
-    // getUsuario(@Param('id') id:string) {
-    //     return this.usuarioService.getUsario(parseInt(id));
-    // }
-
-    // @Get()
-    // getUsuarios() {
-    //     return this.usuarioService.getAllUsario();
-    // }
-
-    // @Post()
-    // createUsuario(@Body() usuario:Usuario) {
-    //     console.log(usuario);
-    //     return this.usuarioService.createUsario(usuario)
-    // }
-
     @Post()
     @ApiOperation({ summary: 'Crear un nuevo usuario' })
     newUsuario(@Body() user:CreateUserDto) {

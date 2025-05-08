@@ -35,3 +35,5 @@ $ sudo systemctl restart docker // reiniciar docker
 $ newgrp docker // forzar cambios
 
 docker compose up -d // levantar el docker-compose, en este caso para crear una base de datos postgressql
+
+Como usar el swagger para hacer documentacion de las APIs de la app: https://www.youtube.com/watch?v=Gct2IXPicoU

@@ -6,17 +6,17 @@ import { LoggerMiddleware } from './auth/logger/logger.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
+  app.setGlobalPrefix('api/v1');
   app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
+    .setTitle('Documentacion de las API')
+    .setDescription('Aplicacion de lectura de diarios')
     .setVersion('1.0')
-    .addTag('cats')
+    .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
+  SwaggerModule.setup('docs', app, documentFactory);
 
   app.enableCors();
   // defino el uso de los módulos de usuario y diario del middleware de validacion de login

@@ -1,17 +1,23 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDiarioDto } from './dto/create-diario.dto';
 import { UpdateDiarioDto } from './dto/update-diario.dto';
+import { PrismaService } from 'prisma.service';
 
 @Injectable()
 export class DiarioService {
-    private diarios = Array();
-
-    getDiarios(){
-        return this.diarios;
+    constructor(private readonly prisma:PrismaService){
     }
 
-    getDiario(id:number){
-        const diarioEncontrado = this.diarios.find( item => item.id === id);
+    getAllDiarios(){
+        return this.prisma.diario.findMany();
+    }
+
+    getDiario(id:string){
+        const diarioEncontrado = this.prisma.diario.findUnique({
+            where: {
+                id: id
+            }
+        });
 
         if(!diarioEncontrado)
             throw new NotFoundException(`El diario buscado no existe - id: ${id}`);
@@ -19,32 +25,54 @@ export class DiarioService {
         return diarioEncontrado
     }
 
-    createDiario(diario: CreateDiarioDto){
-        this.diarios.push({
-            ...diario, 
-            id: this.diarios.length + 1
+    async createDiario(diario: CreateDiarioDto){
+        const diarioID = await this.prisma.diario.findFirst({
+            select:{
+                id: true
+            },
+            where: {
+                name:{
+                    contains: diario.name
+                }
+            }
+        }); 
+
+        if(diarioID)
+            throw new NotFoundException(`El diario ya existe - id: ${diarioID}`);
+        
+        return await this.prisma.diario.create({
+            data: {
+                name: diario.name,
+                sigla: diario.sigla
+            }
         });
+    }
+
+    async updateDiario(id:string, diario:UpdateDiarioDto){
+        const diarioID = await this.prisma.diario.findFirst({
+            select:{
+                id: true
+            },
+            where: {
+                id:id
+            }
+        }); 
+
+        if(!diarioID)
+            throw new NotFoundException(`El diario ${diario.name} no existe`);
         
-        return this.diarios;
-    }
+        return await this.prisma.diario.update({
+            where: {
+                id: id
+            },
+            data: {
+                name: diario.name,
+                sigla: diario.sigla
+            }
+        });
+    };
 
-    updateDiario(id:number, diario:UpdateDiarioDto){
-        let indiceDiarioEncontrado = -1;
-        indiceDiarioEncontrado = this.diarios.findIndex(item => item.id === id);
-        
-        if(indiceDiarioEncontrado < 0)
-            throw new NotFoundException(`El diario buscado no existe - id: ${id}`);
-        else{
-            this.diarios[indiceDiarioEncontrado] = { ...this.diarios[indiceDiarioEncontrado], ...diario };
-            return this.diarios[indiceDiarioEncontrado];
-        }
-    }
-
-    refreshDiario(){
-        return "refresh diario";
-    }
-
-    deleteDiario(){
-        return "delete diario";
-    }
+    // deleteDiario(){
+    //     return "delete diario";
+    // }
 }

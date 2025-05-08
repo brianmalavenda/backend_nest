@@ -14,7 +14,8 @@ export class LoggerMiddleware implements NestMiddleware {
       throw new HttpException('Token invalido', HttpStatus.FORBIDDEN);
     }
 
-    console.log("Esto es un log para cuando se consulta el path 'usuario'", req.url);
+    console.log("Esto es un log para para las acciones del usuario", req.url);
     next();
+    console.log("Esto es un log de respuesta", res.statusCode);
   }
 }

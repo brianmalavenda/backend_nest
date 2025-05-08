@@ -12,11 +12,11 @@ export class AuthGuard implements CanActivate {
     // const headerValidate = request.headers['autorization'];
     
     if(request.url === '/greet' && request.method === 'GET'){
-      throw new HttpException('No autorizado', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('No autorizado /greet', HttpStatus.UNAUTHORIZED);
     }
     
     if(!authHeader){
-      console.log('No autorizado');
+      console.log('No esta autorizado');
       return false;
     }
 

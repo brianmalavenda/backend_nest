@@ -1,13 +1,12 @@
-import { IsString } from 'class-validator'
+import { IsOptional, IsString } from 'class-validator'
 
 export class UpdateDiarioDto{
 
+    @IsOptional()
     @IsString()
-    nombre: string
+    name?: string
 
+    @IsOptional()
     @IsString()
-    siglas: string
-    
-    @IsString()
-    autor: string
+    sigla?: string
 } 

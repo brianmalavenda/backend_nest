@@ -1,4 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'prisma.service';
+import { CreateUserDto } from './dto/create-user.dto';
+
 export interface Usuario {
     name: string;
     email: string;
@@ -9,21 +12,16 @@ export interface Usuario {
 @Injectable()
 export class UsuarioService {
 
-    private usuarios = new Array<Usuario>;
+    // Usando prisma para persistir datos en la base de datos
+    constructor(private prisma:PrismaService){
+        
+    }
 
-    getUsario(id: number) {
-        const usuarioEncontrado = this.usuarios.find(item => item.id === id);
-        return usuarioEncontrado
-    }  
-    
-    getAllUsario() {
-        console.log("Obtener todos los usuarios");
-        return this.usuarios;
+    getAllUsarios() {
+        return this.prisma.user.findMany();
     }  
 
-    createUsario(usuario: Usuario) {
-        this.usuarios.push({ ...usuario, id: this.usuarios.length + 1 });
-
-        return "Nuevo usuario creado";
-    }   
+    newUsuario(user:CreateUserDto) {
+        return this.prisma.user.create({data: user});
+    }
 }

@@ -1,5 +1,4 @@
 import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 import { Observable } from 'rxjs';
 
 @Injectable()
@@ -13,11 +12,11 @@ export class AuthGuard implements CanActivate {
     // const headerValidate = request.headers['autorization'];
     
     if(request.url === '/greet' && request.method === 'GET'){
-      throw new HttpException('No autorizado', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('No autorizado /greet', HttpStatus.UNAUTHORIZED);
     }
     
     if(!authHeader){
-      console.log('No autorizado');
+      console.log('No esta autorizado');
       return false;
     }
 

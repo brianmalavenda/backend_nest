@@ -17,16 +17,12 @@ export class PageController {
         return "Error en el servidor  - Status 500 Error";
     }
 
-    @Get('ticket/:num')
-    getNumber(@Param('num', ParseIntPipe) num:number){
-        return num + 7;
-    }
-
     /**
      * 
      * @param query 
      * @returns {String} 
-     * @description manejo de pipeline sde validacion de datos
+     * @description manejo de pipeline sde validacion de datos - no se esta usando es solo de ejemplo
+     * @example http://localhost:3000/greet?name=Juan&age=25
      */
     @Get('greet') //
     @UseGuards(AuthGuard)

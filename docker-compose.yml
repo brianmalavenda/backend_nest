@@ -1,0 +1,10 @@
+services:
+  postgres:
+    image: postgres
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: brian
+      POSTGRES_PASSWORD: brianpass
+      POSTGRES_DB: nestjs
+    ports:
+      - "5494:5432"

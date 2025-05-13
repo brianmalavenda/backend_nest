@@ -3,9 +3,15 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { LoggerMiddleware } from './auth/logger/logger.middleware';
+import * as cors from 'cors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // app.enableCors();
+  app.use(cors({
+  origin: 'http://127.0.0.1:5173', // O el dominio de tu frontend
+  credentials: true
+}));
   app.setGlobalPrefix('api/v1');
   app.useGlobalPipes(new ValidationPipe());
 
@@ -18,7 +24,6 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, documentFactory);
 
-  app.enableCors();
   // defino el uso de los módulos de usuario y diario del middleware de validacion de login
   app.use('/usuario', new LoggerMiddleware().use);
   app.use('/diario', new LoggerMiddleware().use);

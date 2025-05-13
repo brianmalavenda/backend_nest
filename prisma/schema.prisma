@@ -15,7 +15,7 @@ datasource db {
 
 model User {
   id        String   @id @default(uuid())
-  name      String?
+  username  String?
   email     String   @unique
   password  String
   diario DiarioLeido[]
@@ -45,3 +45,4 @@ model DiarioLeido {
 }
 
 // npx prisma migrate dev --name init
+// npx prisma migrate reset

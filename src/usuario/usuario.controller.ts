@@ -1,11 +1,12 @@
 import { Body, Controller, Get, Post, Res, Req } from '@nestjs/common';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { UsuarioService } from './usuario.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { ApiOperation } from '@nestjs/swagger';
 import * as bcrypt from 'bcryptjs';
-import createAccessToken from 'src/auth/jwt';
+import {createAccessToken, validateAccessToken} from 'src/auth/jwt';
+import { type } from 'os';
 
 @Controller('auth/')
 export class UsuarioController {
@@ -65,7 +66,8 @@ export class UsuarioController {
                     });
 
                     return res.status(200).json({
-                        token: token
+                        token: token,
+                        user: user.email
                     });
                     // message: 'Usuario logueado correctamente',
                     // user: await this.usuarioService.getUsuario(usuarioHash),
@@ -80,6 +82,28 @@ export class UsuarioController {
             console.log(e);
         }
     }
+
+    @Get('verify')
+    @ApiOperation({ summary: 'Verificar token usuario' })
+    async VerifyToken(@Req() req: Request, @Res() res:Response) {
+         const cookies = req.cookies;
+        const token = cookies?.['access_token']; 
+        if (!token) return res.status(401).send("No existe el token, no authorizado");
+
+        try{
+            const decoded = await validateAccessToken(token);
+            if (decoded && typeof decoded === 'object' && 'userId' in decoded && 'iat' in decoded && 'exp' in decoded) {
+                const userId = typeof decoded.userId === 'string' ? decoded.userId : String(decoded.userId);
+                const userFound = await this.usuarioService.getUsuarioFromEmail(userId);
+                if(!userFound)
+                    return res.status(400).send("Usuario no encontrado, token inválido");
+
+                return res.json(userFound);
+            }
+        }catch(err){
+            return res.status(400).send("Error al decodificar el token");
+        }
+    };
 
     // @Get()
     // @ApiOperation({ summary: 'Obtener todos los usuarios' })

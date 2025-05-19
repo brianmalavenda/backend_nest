@@ -29,6 +29,14 @@ export class UsuarioService {
             },
         });
     }  
+    
+    async getUsuarioFromEmail(email:string) {
+        return await this.prisma.user.findUnique({
+            where: {
+                email: email,
+            },
+        });
+    }  
 
     async newUsuario(user:CreateUserDto) {
         return await this.prisma.user.create({data: user});

@@ -1,38 +1,42 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateDiarioLeidoDto } from './dto/create-diario-leido.dto';
+import { CreateLecturaDto } from './dto/create-lectura.dto';
 import { PrismaService } from 'prisma.service'
 
 @Injectable()
-export class DiarioLeidoService {
+export class LecturaService {
     constructor(private readonly prisma:PrismaService){
     }
 
-   getAllDiariosLeidoPorUsuario(id:string){
-          const listadoDiarios = this.prisma.diario.findMany({
-              take: 10,
+   async getDiasConLecturaPorUsuario(id:string){
+          const listadoDias = await this.prisma.diarioLeido.findMany({
               where: {
-                  id: id
-              }
+                  userId: id
+              },
+              select: {
+                fecha: true,
+            },
           });            
-  
-          return listadoDiarios; 
+ 
+          const listadoDiasString: string[] = listadoDias.map(item => item.fecha.toISOString())
+
+          return listadoDiasString; 
       }
   
-      async createDiarioLeidoPorUsuario(registrarlectura: CreateDiarioLeidoDto){        
+      async createDiarioLeidoPorUsuario(lectura: CreateLecturaDto){        
           
           await this.prisma.user.findFirst({
               select:{
                   id: true
               },
               where: {
-                  id: registrarlectura.usuario_id
+                  id: lectura.usuario_id
               }
           }).then(async(usuarioEncontrado) => {
               if(!usuarioEncontrado)
-                  throw new NotFoundException(`El usuario ${registrarlectura.usuario_id} no existe `);
+                  throw new NotFoundException(`El usuario ${lectura.usuario_id} no existe `);
           });
   
-          registrarlectura.siglas.forEach(async (diario) => {
+          lectura.siglas.forEach(async (diario) => {
               await this.prisma.diario.findFirst({
                   select:{    
                       id: true
@@ -46,13 +50,13 @@ export class DiarioLeidoService {
   
                   await this.prisma.diarioLeido.create({
                       data: {
-                          userId: registrarlectura.usuario_id,
+                          userId: lectura.usuario_id,
                           diarioId: diarioEncontrado.id,
-                          fecha: new Date(registrarlectura.fecha)
+                          fecha: new Date(lectura.fecha)
                       }
                   });
   
-                  console.log(`DIA:${registrarlectura.fecha} : Diario ${diario} de id ${diarioEncontrado.id} registrado que fue leido por el usuario ${registrarlectura.usuario_id}`);
+                  console.log(`DIA:${lectura.fecha} : Diario ${diario} de id ${diarioEncontrado.id} registrado que fue leido por el usuario ${lectura.usuario_id}`);
               });
           });
   

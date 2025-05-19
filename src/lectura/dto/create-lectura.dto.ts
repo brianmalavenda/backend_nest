@@ -1,6 +1,6 @@
 import { IsArray, IsString, ArrayNotEmpty, IsUUID, IsDateString } from 'class-validator'
 
-export class CreateDiarioLeidoDto{
+export class CreateLecturaDto{
     @IsUUID()
     usuario_id: string;
 

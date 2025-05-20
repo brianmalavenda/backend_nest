@@ -8,14 +8,15 @@ import * as cookieParser from 'cookie-parser'; // Importa cookie-parser
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  // app.enableCors();
-  app.use(cors({
-  origin: 'http://127.0.0.1:5173', // O el dominio de tu frontend
-  credentials: true
-}));
+  // app.enableCors();  
+  app.enableCors({
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+    credentials: true, // si estás usando cookies
+  });
   app.setGlobalPrefix('api/v1');
   app.useGlobalPipes(new ValidationPipe());
-  
+
+  app.use(cookieParser());
 
   const config = new DocumentBuilder()
     .setTitle('Documentacion de las API')
@@ -27,7 +28,6 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, documentFactory);
 
   // defino el uso de los módulos de usuario y diario del middleware de validacion de login
-  app.use(cookieParser());
   app.use('/usuario', new LoggerMiddleware().use);
   app.use('/diario', new LoggerMiddleware().use);
   app.use('/lectura', new LoggerMiddleware().use);

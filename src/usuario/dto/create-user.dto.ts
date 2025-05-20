@@ -18,4 +18,4 @@ export class CreateUserDto {
     //para el borrado lógico
     @IsBoolean()
     isEnable?: boolean = true;
-}
+}   

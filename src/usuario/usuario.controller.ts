@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Res, Req } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res, Req, UnauthorizedException, NotFoundException} from '@nestjs/common';
 import { Response, Request } from 'express';
 import { UsuarioService } from './usuario.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -6,7 +6,6 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { ApiOperation } from '@nestjs/swagger';
 import * as bcrypt from 'bcryptjs';
 import {createAccessToken, validateAccessToken} from 'src/auth/jwt';
-import { type } from 'os';
 
 @Controller('auth/')
 export class UsuarioController {
@@ -86,22 +85,28 @@ export class UsuarioController {
     @Get('verify')
     @ApiOperation({ summary: 'Verificar token usuario' })
     async VerifyToken(@Req() req: Request, @Res() res:Response) {
-         const cookies = req.cookies;
-        const token = cookies?.['access_token']; 
-        if (!token) return res.status(401).send("No existe el token, no authorizado");
+         const token = req.cookies?.['access_token'];
+         console.log("aca esta el token : ",token);
+        if (!token) {
+            console.log("No existe el token, no authorizado");
+            throw new UnauthorizedException("No existe el token, no authorizado");
+        }
 
         try{
             const decoded = await validateAccessToken(token);
             if (decoded && typeof decoded === 'object' && 'userId' in decoded && 'iat' in decoded && 'exp' in decoded) {
                 const userId = typeof decoded.userId === 'string' ? decoded.userId : String(decoded.userId);
                 const userFound = await this.usuarioService.getUsuarioFromEmail(userId);
-                if(!userFound)
-                    return res.status(400).send("Usuario no encontrado, token inválido");
+                if(!userFound){
+                    console.log("Usuario no encontrado, token inválido");
+                    throw new NotFoundException("Usuario no encontrado, token inválido");
+                }
 
                 return res.json(userFound);
             }
         }catch(err){
-            return res.status(400).send("Error al decodificar el token");
+            console.log("Error al decodificar el token");
+            throw new NotFoundException("Error al decodificar el token");
         }
     };
 

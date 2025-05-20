@@ -18,7 +18,7 @@ model User {
   username  String?
   email     String   @unique
   password  String
-  diario DiarioLeido[]
+  diario Lectura[]
   isEnable   Boolean  @default(true)
   createdAt DateTime @default(now())  
   updatedAt DateTime @updatedAt
@@ -28,12 +28,12 @@ model Diario {
   id        String   @id @default(uuid())
   name      String?
   sigla     String   @unique
-  diarioLeido DiarioLeido[]
+  diarioLeido Lectura[]
   createdAt DateTime @default(now())  
   updatedAt DateTime @updatedAt
 }
 
-model DiarioLeido {
+model Lectura {
   id        String   @id @default(uuid())
   userId    String
   diarioId  String

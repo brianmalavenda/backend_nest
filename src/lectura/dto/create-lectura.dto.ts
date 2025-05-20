@@ -4,10 +4,8 @@ export class CreateLecturaDto{
     @IsUUID()
     usuario_id: string;
 
-    @IsArray()
-    @ArrayNotEmpty()
-    @IsString({ each: true })
-    siglas: string[];
+    @IsUUID()
+    diario_id: string;
 
     @IsDateString()
     fecha: Date; // formato ISO 8601

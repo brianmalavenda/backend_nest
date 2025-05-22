@@ -22,7 +22,7 @@ export class LecturaService {
           return listadoDiasString; 
       }
   
-      async createDiarioLeidoPorUsuario(lectura: CreateLecturaDto){        
+      async createLecturaPorUsuario(lectura: CreateLecturaDto){        
           
           await this.prisma.user.findFirst({
               select:{

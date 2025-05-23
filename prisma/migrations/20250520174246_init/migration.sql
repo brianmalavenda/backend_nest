@@ -1,9 +1,10 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
-    "name" TEXT,
+    "username" TEXT,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
+    "isEnable" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -22,7 +23,7 @@ CREATE TABLE "Diario" (
 );
 
 -- CreateTable
-CREATE TABLE "DiarioLeido" (
+CREATE TABLE "Lectura" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "diarioId" TEXT NOT NULL,
@@ -30,7 +31,7 @@ CREATE TABLE "DiarioLeido" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "DiarioLeido_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Lectura_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -40,7 +41,7 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 CREATE UNIQUE INDEX "Diario_sigla_key" ON "Diario"("sigla");
 
 -- AddForeignKey
-ALTER TABLE "DiarioLeido" ADD CONSTRAINT "DiarioLeido_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Lectura" ADD CONSTRAINT "Lectura_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "DiarioLeido" ADD CONSTRAINT "DiarioLeido_diarioId_fkey" FOREIGN KEY ("diarioId") REFERENCES "Diario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Lectura" ADD CONSTRAINT "Lectura_diarioId_fkey" FOREIGN KEY ("diarioId") REFERENCES "Diario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

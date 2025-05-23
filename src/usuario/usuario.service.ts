@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 
 export interface Usuario {
     name: string;
@@ -17,11 +18,27 @@ export class UsuarioService {
         
     }
 
-    getAllUsarios() {
-        return this.prisma.user.findMany();
+    async getAllUsarios() {
+        return await this.prisma.user.findMany();
     }  
 
-    newUsuario(user:CreateUserDto) {
-        return this.prisma.user.create({data: user});
+    async getUsuario(user:LoginUserDto) {
+        return await this.prisma.user.findUnique({
+            where: {
+                email: user.email,
+            },
+        });
+    }  
+    
+    async getUsuarioFromEmail(email:string) {
+        return await this.prisma.user.findUnique({
+            where: {
+                email: email,
+            },
+        });
+    }  
+
+    async newUsuario(user:CreateUserDto) {
+        return await this.prisma.user.create({data: user});
     }
 }

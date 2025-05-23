@@ -1,13 +1,11 @@
 import { IsArray, IsString, ArrayNotEmpty, IsUUID, IsDateString } from 'class-validator'
 
-export class CreateDiarioLeidoDto{
+export class CreateLecturaDto{
     @IsUUID()
     usuario_id: string;
 
-    @IsArray()
-    @ArrayNotEmpty()
-    @IsString({ each: true })
-    siglas: string[];
+    @IsUUID()
+    diario_id: string;
 
     @IsDateString()
     fecha: Date; // formato ISO 8601

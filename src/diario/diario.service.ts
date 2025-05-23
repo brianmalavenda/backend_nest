@@ -8,11 +8,11 @@ export class DiarioService {
     constructor(private readonly prisma:PrismaService){
     }
 
-    getAllDiarios(){
+    async getAllDiarios(){
         return this.prisma.diario.findMany();
     }
 
-    getDiario(id:string){
+    async getDiario(id:string){
         const diarioEncontrado = this.prisma.diario.findUnique({
             where: {
                 id: id
@@ -20,7 +20,20 @@ export class DiarioService {
         });
 
         if(!diarioEncontrado)
-            throw new NotFoundException(`El diario buscado no existe - id: ${id}`);
+            throw new NotFoundException(`El diario buscado no existe - id: ${id}`);        
+
+        return diarioEncontrado
+    }
+
+    async getDiarioFromSigla(sigla:string){
+        const diarioEncontrado = this.prisma.diario.findFirst({
+            where: {
+                sigla: sigla
+            }
+        });
+
+        if(!diarioEncontrado)
+            throw new NotFoundException(`El diario buscado no existe - sigla: ${sigla}`);
 
         return diarioEncontrado
     }

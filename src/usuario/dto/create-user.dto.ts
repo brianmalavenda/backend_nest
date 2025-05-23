@@ -1,9 +1,10 @@
+import { Optional } from '@nestjs/common';
 import { IsBoolean, IsDate, IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateUserDto {
     @IsString()
     @IsNotEmpty()
-    name: string;
+    username: string;
 
     @IsString()
     @IsEmail()
@@ -16,5 +17,5 @@ export class CreateUserDto {
 
     //para el borrado lógico
     @IsBoolean()
-    IsEnable: boolean = true;
-}
+    isEnable?: boolean = true;
+}   

@@ -1,6 +1,4 @@
-import { rejects } from 'assert';
 import * as jwt from 'jsonwebtoken';
-import { resolve } from 'path';
 
 export async function createAccessToken(userId: string){
     // Generar un token de acceso con una clave secreta y una duración de 1 hora

@@ -40,7 +40,8 @@ export class UsuarioController {
         try{
             // const passHash = await bcrypt.hash(user.password,10)
             const userFound = await this.usuarioService.getUsuario(user);
-            
+            console.log(userFound);
+
             if (!userFound?.password) {
                 return res.status(400).json({ message: 'Usuario no encontrado o contraseña inválida' });
             }
@@ -54,9 +55,10 @@ export class UsuarioController {
                         isEnable: true,
                     }
 
+                    console.log(usuarioHash);
                     // Generar un token de acceso
                     const token = await createAccessToken(usuarioHash.email);
-                    
+                    console.log(token);
                     // Guardar el token en una cookie
                     res.cookie('access_token', token, {
                         httpOnly: true,       // previene acceso desde JS del cliente

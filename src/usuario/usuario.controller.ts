@@ -12,7 +12,7 @@ export class UsuarioController {
     constructor(private usuarioService:UsuarioService){
     }
 
-    @Post('register')
+    @Post('registracion')
     @ApiOperation({ summary: 'Crear un nuevo usuario' })
     async Registrarse(@Body() user:CreateUserDto, @Res() res: Response) {
         try{
@@ -110,6 +110,17 @@ export class UsuarioController {
             console.log("Error al decodificar el token");
             throw new NotFoundException("Error al decodificar el token");
         }
+    };
+
+    @Get('logout')
+    @ApiOperation({ summary: 'Cerrar sesion' })
+    async Logout(@Res() res: Response) {
+        res.cookie("token", "", {
+            httpOnly: true,
+            secure: true,
+            expires: new Date(0),
+        });
+        return res.sendStatus(200);
     };
 
     // @Get()

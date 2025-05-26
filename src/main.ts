@@ -10,8 +10,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   // app.enableCors();  
   app.enableCors({
-    // origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
-    origin: [process.env.FRONTEND_URL, 'https://ejeslectura.up.railway.app'], // Reemplaza con la URL de tu frontend
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+    // origin: [process.env.FRONTEND_URL, 'https://ejeslectura.up.railway.app'], // Reemplaza con la URL de tu frontend
     credentials: true, // si estás usando cookies
   });
   app.setGlobalPrefix('api/v1');
